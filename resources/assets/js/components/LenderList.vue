@@ -70,21 +70,22 @@
                 return `https://www.trulia.com/mortgage-lender-profile/${name}`
             },
             selectLocation(location) {
+                this.location = location
+                this.locations = []
                 axios.get(`locations/${location}`).then(response => {
                     if (response.status == 200) {
                         this.lenders = response.data.lenders
-                        this.locations = []
                     } else {
                         Error('Something went wrong with fetching cj')
                     }
                 })
             },
             searchByBankName() {
+                this.locations = []
                 if (this.location.length == 0) {
                     axios.get(`lenders/${this.name}`).then(response => {
                         if (response.status == 200) {
                             this.lenders = response.data.lenders
-                            this.locations = []
                         } else {
                             Error('Something went wrong with fetching cj')
                         }
