@@ -1,0 +1,50 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+    image: laravel/app
+    volumes:
+     - .:/var/www/html
+    ports:
+     - "${APP_PORT}:80"
+    networks:
+     - sdnet
+  node:
+    build:
+      context: ./docker/node
+      dockerfile: Dockerfile
+    image: laravel/node
+    volumes:
+     - .:/var/www/html
+    networks:
+     - sdnet
+  mysql:
+    image: mysql:5.6.39
+    ports:
+     - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "mortgage"
+      MYSQL_USER: "mortgage-dev"
+      MYSQL_PASSWORD: "secret"
+    volumes:
+     - mysqldata:/var/lib/mysql
+    networks:
+     - sdnet
+  redis:
+    image: redis:alpine
+    volumes:
+     - redisdata:/data
+    networks:
+     - sdnet
+networks:
+  sdnet:
+    driver: "bridge"
+volumes:
+  mysqldata:
+    driver: "local"
+  redisdata:
+    driver: "local"
+
