@@ -10,7 +10,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset(mix('/css/app.css')) }}">
     </head>
     <body>
         <div id="app" class="container">
@@ -22,5 +22,5 @@
         <!-- Modal -->
         <!-- Modal -->
     </body>
-    <script src="{{ mix('js/app.js') }}"></script>
+    <script src="{{ asset(mix('/js/app.js')) }}"></script>
 </html>
