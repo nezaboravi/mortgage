@@ -16,7 +16,7 @@
                             <input type="text" class="form-control" id="searchTerm" aria-describedby="emailHelp" placeholder="Loan Officer or bank" v-model="name">
                         </div>
                         <div class="form-group col-md-2 d-flex align-items-end">
-                            <button type="button" class="btn btn-primary">Search</button>
+                            <button type="button" class="btn btn-primary" @click="searchByBankName">Search</button>
                         </div>
                     </div>
                 </form>
@@ -28,7 +28,7 @@
                     <div class="media">
                         <a :href="getPublicURL(lender.screenName)" target="_new"><img class="mr-3" :src="getImageURL(lender.id, lender.imageId)" alt="Generic placeholder image" style="height: 100px;"></a>
                         <div class="media-body">
-                            <a :href="getPublicURL(lender.screenName)" target="_new"><h5 class="mt-0">{{lender.companyName}}</h5></a>
+                            <a :href="getPublicURL(lender.screenName)" target="_new"><h5 class="mt-0" v-text="getCompanyName(lender)"></h5></a>
                             <p class="small text-muted mb-1" v-text="`NMLS# ${lender.nmlsId}`"></p>
                             <p class="small text-muted mb-1" v-text="`Rating: ${lender.rating}`"></p>
                             <p class="small text-muted mb-1"> {{ `${lender.recentReviews} reviews`}}</p>
@@ -70,14 +70,33 @@
                 return `https://www.trulia.com/mortgage-lender-profile/${name}`
             },
             selectLocation(location) {
-                axios.get(`lenders/${location}`).then(response => {
-                if (response.status == 200) {
-                    this.lenders = response.data.lenders
-                    this.locations = []
-                } else {
-                    Error('Something went wrong with fetching cj')
+                axios.get(`locations/${location}`).then(response => {
+                    if (response.status == 200) {
+                        this.lenders = response.data.lenders
+                        this.locations = []
+                    } else {
+                        Error('Something went wrong with fetching cj')
+                    }
+                })
+            },
+            searchByBankName() {
+                axios.get(`lenders/${this.name}`).then(response => {
+                    if (response.status == 200) {
+                        this.lenders = response.data.lenders
+                        this.locations = []
+                    } else {
+                        Error('Something went wrong with fetching cj')
+                    }
+                })
+            },
+            getCompanyName(lender) {
+                if (lender.companyName) {
+                    return lender.companyName
                 }
-            })
+                var firstName = lender.individualName.firstName ? lender.individualName.firstName : ""
+                var middleName = lender.individualName.middleName ? lender.individualName.middleName : ""
+                var lastName = lender.individualName.lastName
+                return `${firstName} ${middleName} ${lastName}`
             }
         },
     }
