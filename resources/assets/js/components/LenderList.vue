@@ -53,8 +53,8 @@
         },
         methods: {
             getLocation() {
-                if (this.location.length >= 2) {
-                    axios.get(`locations/${this.location}`).then(response => {
+                if (this.location.length >= 2 && this.name.length == 0) {
+                    axios.get(`places/${this.location}`).then(response => {
                         if (response.status == 200) {
                             this.locations = response.data.locations
                         }
@@ -80,14 +80,27 @@
                 })
             },
             searchByBankName() {
-                axios.get(`lenders/${this.name}`).then(response => {
-                    if (response.status == 200) {
-                        this.lenders = response.data.lenders
-                        this.locations = []
-                    } else {
-                        Error('Something went wrong with fetching cj')
-                    }
-                })
+                if (this.location.length == 0) {
+                    axios.get(`lenders/${this.name}`).then(response => {
+                        if (response.status == 200) {
+                            this.lenders = response.data.lenders
+                            this.locations = []
+                        } else {
+                            Error('Something went wrong with fetching cj')
+                        }
+                    })
+                } else {
+                    axios.get(`locations/${this.location}/lenders/${this.name}`).then(response => {
+                        if (response.status == 200) {
+                            this.lenders = response.data.lenders
+                            this.locations = []
+                        } else {
+                            Error('Something went wrong with fetching cj')
+                        }
+                    })
+                }
+
+
             },
             getCompanyName(lender) {
                 if (lender.companyName) {

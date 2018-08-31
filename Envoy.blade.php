@@ -28,8 +28,6 @@ runYarn
 generateAssets
 updateSymlinks
 optimizeInstallation
-backupDatabase
-migrateDatabase
 blessNewRelease
 cleanOldReleases
 finishDeploy
@@ -142,7 +140,6 @@ cd {{ $newReleaseDir }}
 php artisan config:clear
 php artisan cache:clear
 php artisan config:cache
-php artisan responsecache:flush
 
 sudo service php7.1-fpm reload
 @endtask
@@ -166,9 +163,7 @@ git pull origin master
 php artisan config:clear
 php artisan cache:clear
 php artisan config:cache
-php artisan responsecache:flush
-sudo supervisorctl restart all
-sudo service php7.1-fpm restart
+sudo service php7.1-fpm reload
 @endtask
 
 
