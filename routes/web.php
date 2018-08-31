@@ -1,8 +1,5 @@
 <?php
 
-use App\Services\Trulia;
-use GuzzleHttp\Client;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,37 +16,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/locations/{location}/lenders/{lender}', function () {
-    $client = new Trulia;
+Route::get('/locations/{location}/lenders/{lender}', 'MortgageController@bankOrPlaces');
 
-    $response = $client->fetchWithBankOrLocations();
-    $data = json_decode($response);
-    return response()->json(["lenders" => $data->lenders], 200);
-});
+Route::get('/locations/{location}', 'MortgageController@bankOrPlaces');
 
+Route::get('/lenders/{lender}', 'MortgageController@bankOrPlaces');
 
-Route::get('/locations/{location}', function () {
-    $client = new Trulia;
-
-    $response = $client->fetchWithBankOrLocations();
-    $data = json_decode($response);
-    return response()->json(["lenders" => $data->lenders], 200);
-});
-
-Route::get('/lenders/{lender}', function () {
-    $client = new Trulia;
-
-    $response = $client->fetchWithBankOrLocations();
-    $data = json_decode($response);
-    return response()->json(["lenders" => $data->lenders], 200);
-});
-
-
-
-Route::get('/places/{prefix}', function () {
-    $client = new Trulia;
-
-    $response = $client->fetchPlaces();
-    $data = json_decode($response);
-    return response()->json(["locations" => $data->names], 200);
-});
+Route::get('/places/{prefix}', 'MortgageController@places');
